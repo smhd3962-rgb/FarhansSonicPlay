@@ -112,8 +112,8 @@ class AudioEffectsController {
                 if (presetIndex in 0 until eq.numberOfPresets) {
                     eq.usePreset(presetIndex.toShort())
                     val bands = mutableMapOf<Int, Int>()
-                    for (i in 0 until eq.numberOfBands) {
-                        bands[i.toInt()] = eq.getBandLevel(i).toInt()
+                    for (i in 0 until eq.numberOfBands.toInt()) {
+                        bands[i] = eq.getBandLevel(i.toShort()).toInt()
                     }
                     _effectsState.value = _effectsState.value.copy(
                         presetIndex = presetIndex,

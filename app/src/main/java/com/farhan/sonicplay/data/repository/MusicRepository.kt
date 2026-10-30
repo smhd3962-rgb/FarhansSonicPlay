@@ -124,13 +124,17 @@ class MusicRepository(
 
     suspend fun getArtists(): List<Artist> = withContext(Dispatchers.IO) {
         val songs = songDao.getAllSongs()
-        songs.groupBy { it.artist }.mapIndexed { index, (artistName, songsByArtist) ->
-            val albums = songsByArtist.map { it.albumId }.distinct()
+        val artistGroups = songs.groupBy { it.artist }
+        var counter = 1L
+        artistGroups.map { entry ->
+            val artistName = entry.key
+            val songsByArtist = entry.value
+            val albumCount = songsByArtist.map { it.albumId }.distinct().size
             Artist(
-                id = index.toLong() + 1,
+                id = counter++,
                 name = artistName,
                 songCount = songsByArtist.size,
-                albumCount = albums.size
+                albumCount = albumCount
             )
         }.sortedBy { it.name.lowercase() }
     }
